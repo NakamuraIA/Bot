@@ -93,6 +93,10 @@ fn attachments_to_format(attachments: &[serenity::Attachment]) -> Option<&'stati
     }
 }
 
+fn strip_punctuation(regex_cache: &RegexCache, content: &str) -> String {
+    regex_cache.punctuation_filter.replace_all(content, " ").into_owned()
+}
+
 fn remove_repeated_chars(content: &str, limit: u8) -> String {
     let mut out = String::new();
     for (_, group) in &content.chars().chunk_by(|&c| c) {
@@ -277,6 +281,8 @@ pub fn clean(
         if contained_url {
             filtered_content.maybe_clone_into(&mut content.text);
         }
+
+        strip_punctuation(regex_cache, &content.text).maybe_clone_into(&mut content.text);
     }
 
     let attached_file_format = attachments_to_format(content.attachments);

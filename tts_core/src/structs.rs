@@ -165,6 +165,7 @@ pub struct RegexCache {
     pub id_in_brackets: regex::Regex,
     pub emoji_captures: regex::Regex,
     pub emoji_filter: regex::Regex,
+    pub punctuation_filter: regex::Regex,
 }
 
 impl RegexCache {
@@ -181,6 +182,9 @@ impl RegexCache {
             id_in_brackets: regex::Regex::new(r"\((\d+)\)")?,
             emoji_captures: regex::Regex::new(r"<(a?):([^<>]+):\d+>")?,
             emoji_filter: regex::Regex::new(r"(?s:<a?:[^<>]+:\d+>)|\p{Emoji_Presentation}")?,
+            punctuation_filter: regex::Regex::new(
+                r"[-_:\(\)><\/'`^\\\*~#@$%&+=!|{}\[\]""]",
+            )?,
             bot_mention: OnceLock::new(),
         })
     }
